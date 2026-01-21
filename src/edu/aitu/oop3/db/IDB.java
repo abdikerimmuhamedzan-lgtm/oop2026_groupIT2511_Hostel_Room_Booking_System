@@ -1,4 +1,4 @@
-package edu.aitu.oop3;
+package edu.aitu.oop3.db;
 
 import java.sql.Connection;
 import java.sql.SQLException;
