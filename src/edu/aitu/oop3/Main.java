@@ -4,6 +4,8 @@ import edu.aitu.oop3.db.IDB;
 import edu.aitu.oop3.db.PostgresDB;
 import edu.aitu.oop3.repositories.IReservationRepository;
 import edu.aitu.oop3.repositories.IRoomRepository;
+import edu.aitu.oop3.repositories.Interfaces.IReservation;
+import edu.aitu.oop3.repositories.Interfaces.Iroomrepository;
 import edu.aitu.oop3.repositories.ReservationRepository;
 import edu.aitu.oop3.repositories.RoomRepository;
 import edu.aitu.oop3.services.BookingService;
@@ -13,8 +15,8 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         IDB db = new PostgresDB();
-        IRoomRepository roomRepo = new RoomRepository(db);
-        IReservationRepository resRepo = new ReservationRepository(db);
+        Iroomrepository roomRepo = new RoomRepository(db);
+        IReservation resRepo = new ReservationRepository(db);
         BookingService service = new BookingService(roomRepo, resRepo);
 
         Scanner scanner = new Scanner(System.in);
