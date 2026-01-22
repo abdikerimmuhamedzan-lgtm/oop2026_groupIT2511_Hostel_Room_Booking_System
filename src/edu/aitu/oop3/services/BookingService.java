@@ -2,8 +2,8 @@ package edu.aitu.oop3.services;
 
 import edu.aitu.oop3.entities.Reservation;
 import edu.aitu.oop3.entities.Room;
-import edu.aitu.oop3.repositories.Interfaces.IReservation;
-import edu.aitu.oop3.repositories.Interfaces.Iroomrepository;
+import edu.aitu.oop3.repositories.IReservation;
+import edu.aitu.oop3.repositories.Iroomrepository;
 
 import java.sql.Date;
 import java.util.List;
@@ -25,12 +25,12 @@ public class BookingService {
         try {
             Date checkIn = Date.valueOf(checkInStr);
             Date checkOut = Date.valueOf(checkOutStr);
+
             Room room = roomRepo.getRoomById(roomId);
             if (room == null) {
                 return "Error: Room not found with ID " + roomId;
             }
 
-            // 2. Считаем дни и цену
             long differenceInMillis = checkOut.getTime() - checkIn.getTime();
             long days = differenceInMillis / (1000 * 60 * 60 * 24);
 
@@ -39,7 +39,6 @@ public class BookingService {
             }
 
             double totalPrice = days * room.getPrice();
-
 
             Reservation reservation = new Reservation(0, guestId, roomId, checkIn, checkOut, totalPrice, "CONFIRMED");
             boolean created = reservationRepo.createReservation(reservation);

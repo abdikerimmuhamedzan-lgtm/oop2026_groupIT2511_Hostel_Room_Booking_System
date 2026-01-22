@@ -2,8 +2,6 @@ package edu.aitu.oop3.repositories;
 
 import edu.aitu.oop3.db.IDB;
 import edu.aitu.oop3.entities.Room;
-import edu.aitu.oop3.repositories.Interfaces.Iroomrepository;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

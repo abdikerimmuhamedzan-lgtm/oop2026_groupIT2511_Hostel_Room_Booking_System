@@ -1,4 +1,4 @@
-package edu.aitu.oop3.repositories.Interfaces;
+package edu.aitu.oop3.repositories;
 
 import edu.aitu.oop3.entities.Room;
 import java.util.List;

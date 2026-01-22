@@ -5,8 +5,8 @@ import edu.aitu.oop3.db.PostgresDB;
 import edu.aitu.oop3.entities.Room;
 import edu.aitu.oop3.repositories.ReservationRepository;
 import edu.aitu.oop3.repositories.RoomRepository;
-import edu.aitu.oop3.repositories.Interfaces.IReservation;       // Используем твои текущие имена
-import edu.aitu.oop3.repositories.Interfaces.Iroomrepository;    // Используем твои текущие имена
+import edu.aitu.oop3.repositories.IReservation;
+import edu.aitu.oop3.repositories.Iroomrepository;
 import edu.aitu.oop3.services.BookingService;
 
 import java.util.List;
@@ -14,16 +14,10 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
         IDB db = new PostgresDB();
-
-
         Iroomrepository roomRepo = new RoomRepository(db);
         IReservation resRepo = new ReservationRepository(db);
-
-
         BookingService service = new BookingService(roomRepo, resRepo);
-
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Connecting to database...");
@@ -56,7 +50,7 @@ public class Main {
                 }
 
             } else if (choice == 2) {
-                System.out.print("Enter Guest ID (e.g. 1): ");
+                System.out.print("Enter Guest ID: ");
                 int guestId = scanner.nextInt();
                 System.out.print("Enter Room ID: ");
                 int roomId = scanner.nextInt();

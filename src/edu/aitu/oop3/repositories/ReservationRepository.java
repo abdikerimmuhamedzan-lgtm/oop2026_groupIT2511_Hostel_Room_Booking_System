@@ -2,7 +2,6 @@ package edu.aitu.oop3.repositories;
 
 import edu.aitu.oop3.db.IDB;
 import edu.aitu.oop3.entities.Reservation;
-import edu.aitu.oop3.repositories.Interfaces.IReservation;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -42,7 +41,6 @@ public class ReservationRepository implements IReservation {
 
     @Override
     public List<Reservation> getReservationsByGuestId(int guestId) {
-        // Базовая реализация (можно расширить позже)
         return new ArrayList<>();
     }
 }
