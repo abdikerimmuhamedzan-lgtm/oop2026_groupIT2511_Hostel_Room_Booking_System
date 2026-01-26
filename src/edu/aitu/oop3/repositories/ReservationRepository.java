@@ -43,4 +43,23 @@ public class ReservationRepository implements IReservation {
     public List<Reservation> getReservationsByGuestId(int guestId) {
         return new ArrayList<>();
     }
+
+    @Override
+    public boolean updateStatus(int id, String status) {
+        Connection con = null;
+        try {
+            con = db.getConnection();
+            String sql = "UPDATE reservations SET status = ? WHERE id = ?";
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setString(1, status);
+            st.setInt(2, id);
+            st.executeUpdate();
+            return true;
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
 }

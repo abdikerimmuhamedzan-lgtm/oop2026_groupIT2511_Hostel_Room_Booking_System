@@ -21,6 +21,29 @@ public class BookingService {
         return roomRepo.getAllRooms();
     }
 
+    public List<Room> getAvailableRooms(String checkInStr, String checkOutStr) {
+        try {
+            Date checkIn = Date.valueOf(checkInStr);
+            Date checkOut = Date.valueOf(checkOutStr);
+            return roomRepo.getAvailableRooms(checkIn, checkOut);
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: Invalid date format. Please use YYYY-MM-DD.");
+            return null;
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public String cancelReservation(int reservationId) {
+        boolean updated = reservationRepo.updateStatus(reservationId, "CANCELLED");
+        if (updated) {
+            return "Reservation " + reservationId + " cancelled successfully.";
+        } else {
+            return "Error: Could not cancel reservation (ID might be wrong).";
+        }
+    }
+
     public String makeReservation(int guestId, int roomId, String checkInStr, String checkOutStr) {
         try {
             Date checkIn = Date.valueOf(checkInStr);
@@ -36,6 +59,19 @@ public class BookingService {
 
             if (days <= 0) {
                 return "Error: Check-out date must be after check-in date.";
+            }
+
+            List<Room> availableRooms = roomRepo.getAvailableRooms(checkIn, checkOut);
+            boolean isFree = false;
+            for (Room r : availableRooms) {
+                if (r.getId() == roomId) {
+                    isFree = true;
+                    break;
+                }
+            }
+
+            if (!isFree) {
+                return "Error: Room " + roomId + " is already booked for these dates!";
             }
 
             double totalPrice = days * room.getPrice();

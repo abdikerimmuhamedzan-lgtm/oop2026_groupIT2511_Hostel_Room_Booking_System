@@ -86,4 +86,38 @@ public class RoomRepository implements Iroomrepository {
             try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
     }
+
+    @Override
+    public List<Room> getAvailableRooms(Date checkIn, Date checkOut) {
+        Connection con = null;
+        try {
+            con = db.getConnection();
+            String sql = "SELECT * FROM rooms WHERE id NOT IN (" +
+                    "SELECT room_id FROM reservations " +
+                    "WHERE (check_in < ? AND check_out > ?) " +
+                    "AND status <> 'CANCELLED')";
+
+            PreparedStatement st = con.prepareStatement(sql);
+            st.setDate(1, checkOut);
+            st.setDate(2, checkIn);
+
+            ResultSet rs = st.executeQuery();
+            List<Room> rooms = new ArrayList<>();
+            while (rs.next()) {
+                rooms.add(new Room(
+                        rs.getInt("id"),
+                        rs.getInt("number"),
+                        rs.getString("type"),
+                        rs.getDouble("price"),
+                        rs.getBoolean("is_available")
+                ));
+            }
+            return rooms;
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        } finally {
+            try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
 }
