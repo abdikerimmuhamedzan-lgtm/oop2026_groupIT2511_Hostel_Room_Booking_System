@@ -9,7 +9,7 @@ public class Reservation {
     private Date checkIn;
     private Date checkOut;
     private double totalPrice;
-    private String status; // "CONFIRMED", "CANCELLED"
+    private String status;
 
     public Reservation() {}
 
@@ -23,6 +23,54 @@ public class Reservation {
         this.status = status;
     }
 
+    private Reservation(Builder builder) {
+        this.id = 0;
+        this.guestId = builder.guestId;
+        this.roomId = builder.roomId;
+        this.checkIn = builder.checkIn;
+        this.checkOut = builder.checkOut;
+        this.totalPrice = builder.totalPrice;
+        this.status = builder.status;
+    }
+
+    public static class Builder {
+        private int guestId;
+        private int roomId;
+        private Date checkIn;
+        private Date checkOut;
+        private double totalPrice;
+        private String status = "PENDING";
+
+        public Builder setGuestId(int guestId) {
+            this.guestId = guestId;
+            return this;
+        }
+
+        public Builder setRoomId(int roomId) {
+            this.roomId = roomId;
+            return this;
+        }
+
+        public Builder setDates(Date checkIn, Date checkOut) {
+            this.checkIn = checkIn;
+            this.checkOut = checkOut;
+            return this;
+        }
+
+        public Builder setTotalPrice(double totalPrice) {
+            this.totalPrice = totalPrice;
+            return this;
+        }
+
+        public Builder setStatus(String status) {
+            this.status = status;
+            return this;
+        }
+
+        public Reservation build() {
+            return new Reservation(this);
+        }
+    }
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
