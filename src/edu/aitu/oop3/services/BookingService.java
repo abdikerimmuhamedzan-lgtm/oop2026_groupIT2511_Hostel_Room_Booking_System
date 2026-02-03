@@ -6,7 +6,9 @@ import edu.aitu.oop3.repositories.IReservation;
 import edu.aitu.oop3.repositories.Iroomrepository;
 
 import java.sql.Date;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BookingService {
     private final Iroomrepository roomRepo;
@@ -15,6 +17,16 @@ public class BookingService {
     public BookingService(Iroomrepository roomRepo, IReservation reservationRepo) {
         this.roomRepo = roomRepo;
         this.reservationRepo = reservationRepo;
+    }
+
+    public List<Room> getRoomsFilteredByPrice(double maxPrice) {
+        List<Room> allRooms = roomRepo.getAllRooms();
+        if (allRooms == null) return null;
+
+        return allRooms.stream()
+                .filter(room -> room.getPrice() <= maxPrice)
+                .sorted(Comparator.comparingDouble(Room::getPrice))
+                .collect(Collectors.toList());
     }
 
     public List<Room> getAllRooms() {
