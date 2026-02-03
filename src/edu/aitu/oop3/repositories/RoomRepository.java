@@ -14,6 +14,21 @@ public class RoomRepository implements Iroomrepository {
     }
 
     @Override
+    public boolean create(Room entity) {
+        return createRoom(entity);
+    }
+
+    @Override
+    public Room getById(int id) {
+        return getRoomById(id);
+    }
+
+    @Override
+    public List<Room> getAll() {
+        return getAllRooms();
+    }
+
+    @Override
     public boolean createRoom(Room room) {
         Connection con = null;
         try {
