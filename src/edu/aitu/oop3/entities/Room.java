@@ -13,7 +13,8 @@ public class Room {
         this.id = id;
         this.number = number;
         this.type = type;
-        this.price = price;
+        this
+                .price = price;
         this.isAvailable = isAvailable;
     }
 
