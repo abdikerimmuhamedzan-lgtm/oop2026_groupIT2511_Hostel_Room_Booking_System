@@ -2,11 +2,15 @@ package edu.aitu.oop3;
 
 import edu.aitu.oop3.db.IDB;
 import edu.aitu.oop3.db.PostgresDB;
+import edu.aitu.oop3.entities.Reservation;
 import edu.aitu.oop3.entities.Room;
+import edu.aitu.oop3.entities.RoomFactory;
 import edu.aitu.oop3.repositories.*;
 import edu.aitu.oop3.services.BookingService;
 import edu.aitu.oop3.services.PaymentService;
+import edu.aitu.oop3.utils.PricingStrategy;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -24,11 +28,14 @@ public class Main {
         System.out.println("Connecting to database...");
 
         while (true) {
-            System.out.println("\n HOSTEL BOOKING SYSTEM ");
+            System.out.println("\n HOSTEL BOOKING SYSTEM (Milestone 2)");
             System.out.println("1. List All Rooms");
-            System.out.println("2. Search Available Rooms (by Date)");
+            System.out.println("2. Search Available Rooms");
             System.out.println("3. Make Reservation");
             System.out.println("4. Cancel Reservation");
+            System.out.println("5. Add New Room ");
+            System.out.println("6. Filter Rooms by Price ");
+            System.out.println("7. Custom Reservation ");
             System.out.println("0. Exit");
             System.out.print("Select option: ");
 
@@ -91,6 +98,58 @@ public class Main {
                 String result = service.cancelReservation(resId);
                 System.out.println("\n>>> " + result);
 
+            } else if (choice == 5) {
+                System.out.print("Enter Room Type (Standard/Suite/Dorm): ");
+                String type = scanner.next();
+                System.out.print("Enter Room Number: ");
+                int number = scanner.nextInt();
+
+                Room newRoom = RoomFactory.createRoom(type, number);
+                boolean success = roomRepo.createRoom(newRoom);
+                if (success) {
+                    System.out.println("Room created: " + newRoom);
+                } else {
+                    System.out.println("Failed to create room.");
+                }
+
+            } else if (choice == 6) {
+
+                System.out.print("Enter max price: ");
+                double max = scanner.nextDouble();
+
+                List<Room> cheapRooms = service.getRoomsFilteredByPrice(max);
+                if (cheapRooms != null) {
+                    cheapRooms.forEach(r -> System.out.println(r));
+                }
+
+            } else if (choice == 7) {
+                System.out.println("--- Special Booking ---");
+                System.out.print("Guest ID: ");
+                int gId = scanner.nextInt();
+                System.out.print("Room ID: ");
+                int rId = scanner.nextInt();
+                System.out.print("Date (YYYY-MM-DD): ");
+                String dStr = scanner.next();
+                Date date = Date.valueOf(dStr);
+
+                Room room = roomRepo.getRoomById(rId);
+                if (room != null) {
+                    PricingStrategy pricing = PricingStrategy.getInstance();
+                    double finalPrice = pricing.calculatePrice(room.getPrice(), date.toLocalDate());
+                    System.out.println("Calculated Price (with seasonal/weekend adjustment): " + finalPrice);
+                    Reservation res = new Reservation.Builder()
+                            .setGuestId(gId)
+                            .setRoomId(rId)
+                            .setDates(date, date)
+                            .setTotalPrice(finalPrice)
+                            .setStatus("CONFIRMED")
+                            .build();
+
+                    boolean created = resRepo.createReservation(res);
+                    System.out.println("Reservation created via Builder: " + created);
+                } else {
+                    System.out.println("Room not found.");
+                }
             } else if (choice == 0) {
                 System.out.println("Goodbye!");
                 break;
