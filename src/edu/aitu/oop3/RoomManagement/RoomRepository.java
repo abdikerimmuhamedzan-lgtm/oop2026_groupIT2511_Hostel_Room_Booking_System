@@ -1,12 +1,11 @@
-package edu.aitu.oop3.repositories;
+package edu.aitu.oop3.RoomManagement;
 
-import edu.aitu.oop3.db.IDB;
-import edu.aitu.oop3.entities.Room;
+import edu.aitu.oop3.Common.IDB;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RoomRepository implements Iroomrepository {
+public class RoomRepository implements IRoomRepository {
     private final IDB db;
 
     public RoomRepository(IDB db) {
@@ -14,19 +13,11 @@ public class RoomRepository implements Iroomrepository {
     }
 
     @Override
-    public boolean create(Room entity) {
-        return createRoom(entity);
-    }
-
+    public boolean create(Room entity) { return createRoom(entity); }
     @Override
-    public Room getById(int id) {
-        return getRoomById(id);
-    }
-
+    public Room getById(int id) { return getRoomById(id); }
     @Override
-    public List<Room> getAll() {
-        return getAllRooms();
-    }
+    public List<Room> getAll() { return getAllRooms(); }
 
     @Override
     public boolean createRoom(Room room) {
@@ -44,9 +35,7 @@ public class RoomRepository implements Iroomrepository {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
             return false;
-        } finally {
-            try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
-        }
+        } finally { try { if (con != null) con.close(); } catch (SQLException e) {} }
     }
 
     @Override
@@ -59,19 +48,10 @@ public class RoomRepository implements Iroomrepository {
             st.setInt(1, id);
             ResultSet rs = st.executeQuery();
             if (rs.next()) {
-                return new Room(
-                        rs.getInt("id"),
-                        rs.getInt("number"),
-                        rs.getString("type"),
-                        rs.getDouble("price"),
-                        rs.getBoolean("is_available")
-                );
+                return new Room(rs.getInt("id"), rs.getInt("number"), rs.getString("type"), rs.getDouble("price"), rs.getBoolean("is_available"));
             }
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
-        }
+        } catch (SQLException | ClassNotFoundException e) { e.printStackTrace(); }
+        finally { try { if (con != null) con.close(); } catch (SQLException e) {} }
         return null;
     }
 
@@ -85,21 +65,11 @@ public class RoomRepository implements Iroomrepository {
             ResultSet rs = st.executeQuery(sql);
             List<Room> rooms = new ArrayList<>();
             while (rs.next()) {
-                rooms.add(new Room(
-                        rs.getInt("id"),
-                        rs.getInt("number"),
-                        rs.getString("type"),
-                        rs.getDouble("price"),
-                        rs.getBoolean("is_available")
-                ));
+                rooms.add(new Room(rs.getInt("id"), rs.getInt("number"), rs.getString("type"), rs.getDouble("price"), rs.getBoolean("is_available")));
             }
             return rooms;
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
-        }
+        } catch (SQLException | ClassNotFoundException e) { e.printStackTrace(); return null; }
+        finally { try { if (con != null) con.close(); } catch (SQLException e) {} }
     }
 
     @Override
@@ -111,28 +81,16 @@ public class RoomRepository implements Iroomrepository {
                     "SELECT room_id FROM reservations " +
                     "WHERE (check_in < ? AND check_out > ?) " +
                     "AND status <> 'CANCELLED')";
-
             PreparedStatement st = con.prepareStatement(sql);
             st.setDate(1, checkOut);
             st.setDate(2, checkIn);
-
             ResultSet rs = st.executeQuery();
             List<Room> rooms = new ArrayList<>();
             while (rs.next()) {
-                rooms.add(new Room(
-                        rs.getInt("id"),
-                        rs.getInt("number"),
-                        rs.getString("type"),
-                        rs.getDouble("price"),
-                        rs.getBoolean("is_available")
-                ));
+                rooms.add(new Room(rs.getInt("id"), rs.getInt("number"), rs.getString("type"), rs.getDouble("price"), rs.getBoolean("is_available")));
             }
             return rooms;
-        } catch (SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        } finally {
-            try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
-        }
+        } catch (SQLException | ClassNotFoundException e) { e.printStackTrace(); return new ArrayList<>(); }
+        finally { try { if (con != null) con.close(); } catch (SQLException e) {} }
     }
 }

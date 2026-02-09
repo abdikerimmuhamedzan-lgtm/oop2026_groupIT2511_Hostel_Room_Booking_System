@@ -1,18 +1,16 @@
-package edu.aitu.oop3.utils;
+package edu.aitu.oop3.Accounting;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 
 public class PricingStrategy {
     private static PricingStrategy instance;
-    private double weekendMultiplier = 1.2; // +20% в выходные
+    private double weekendMultiplier = 1.2;
 
     private PricingStrategy() {}
 
     public static synchronized PricingStrategy getInstance() {
-        if (instance == null) {
-            instance = new PricingStrategy();
-        }
+        if (instance == null) instance = new PricingStrategy();
         return instance;
     }
 

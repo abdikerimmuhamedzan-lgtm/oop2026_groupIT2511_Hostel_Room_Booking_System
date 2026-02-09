@@ -2,5 +2,6 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/oop2026_groupIT2511_Hostel_Room_Booking_System" vcs="Git" />
   </component>
 </project>

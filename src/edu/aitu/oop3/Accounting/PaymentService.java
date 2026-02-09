@@ -1,7 +1,4 @@
-package edu.aitu.oop3.services;
-
-import edu.aitu.oop3.entities.Payment;
-import edu.aitu.oop3.repositories.IPaymentRepository;
+package edu.aitu.oop3.Accounting;
 
 public class PaymentService {
     private final IPaymentRepository paymentRepo;

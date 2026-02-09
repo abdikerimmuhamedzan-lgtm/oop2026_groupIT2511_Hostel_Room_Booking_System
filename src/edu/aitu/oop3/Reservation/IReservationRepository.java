@@ -1,9 +1,8 @@
-package edu.aitu.oop3.repositories;
+package edu.aitu.oop3.Reservation;
 
-import edu.aitu.oop3.entities.Reservation;
 import java.util.List;
 
-public interface IReservation {
+public interface IReservationRepository {
     boolean createReservation(Reservation reservation);
     List<Reservation> getReservationsByGuestId(int guestId);
     boolean updateStatus(int id, String status);

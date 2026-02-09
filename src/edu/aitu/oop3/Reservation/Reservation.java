@@ -1,4 +1,4 @@
-package edu.aitu.oop3.entities;
+package edu.aitu.oop3.Reservation;
 
 import java.sql.Date;
 
@@ -41,56 +41,22 @@ public class Reservation {
         private double totalPrice;
         private String status = "PENDING";
 
-        public Builder setGuestId(int guestId) {
-            this.guestId = guestId;
-            return this;
-        }
-
-        public Builder setRoomId(int roomId) {
-            this.roomId = roomId;
-            return this;
-        }
-
-        public Builder setDates(Date checkIn, Date checkOut) {
-            this.checkIn = checkIn;
-            this.checkOut = checkOut;
-            return this;
-        }
-
-        public Builder setTotalPrice(double totalPrice) {
-            this.totalPrice = totalPrice;
-            return this;
-        }
-
-        public Builder setStatus(String status) {
-            this.status = status;
-            return this;
-        }
-
-        public Reservation build() {
-            return new Reservation(this);
-        }
+        public Builder setGuestId(int guestId) { this.guestId = guestId; return this; }
+        public Builder setRoomId(int roomId) { this.roomId = roomId; return this; }
+        public Builder setDates(Date checkIn, Date checkOut) { this.checkIn = checkIn; this.checkOut = checkOut; return this; }
+        public Builder setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; return this; }
+        public Builder setStatus(String status) { this.status = status; return this; }
+        public Reservation build() { return new Reservation(this); }
     }
+
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
-
     public int getGuestId() { return guestId; }
-    public void setGuestId(int guestId) { this.guestId = guestId; }
-
     public int getRoomId() { return roomId; }
-    public void setRoomId(int roomId) { this.roomId = roomId; }
-
     public Date getCheckIn() { return checkIn; }
-    public void setCheckIn(Date checkIn) { this.checkIn = checkIn; }
-
     public Date getCheckOut() { return checkOut; }
-    public void setCheckOut(Date checkOut) { this.checkOut = checkOut; }
-
     public double getTotalPrice() { return totalPrice; }
-    public void setTotalPrice(double totalPrice) { this.totalPrice = totalPrice; }
-
     public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
 
     @Override
     public String toString() {

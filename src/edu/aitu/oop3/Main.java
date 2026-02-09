@@ -1,14 +1,19 @@
 package edu.aitu.oop3;
 
-import edu.aitu.oop3.db.IDB;
-import edu.aitu.oop3.db.PostgresDB;
-import edu.aitu.oop3.entities.Reservation;
-import edu.aitu.oop3.entities.Room;
-import edu.aitu.oop3.entities.RoomFactory;
-import edu.aitu.oop3.repositories.*;
-import edu.aitu.oop3.services.BookingService;
-import edu.aitu.oop3.services.PaymentService;
-import edu.aitu.oop3.utils.PricingStrategy;
+import edu.aitu.oop3.Accounting.IPaymentRepository;
+import edu.aitu.oop3.Accounting.PaymentRepository;
+import edu.aitu.oop3.Accounting.PaymentService;
+import edu.aitu.oop3.Accounting.PricingStrategy;
+import edu.aitu.oop3.Common.IDB;
+import edu.aitu.oop3.Common.PostgresDB;
+import edu.aitu.oop3.Reservation.BookingService;
+import edu.aitu.oop3.Reservation.IReservationRepository;
+import edu.aitu.oop3.Reservation.Reservation;
+import edu.aitu.oop3.Reservation.ReservationRepository;
+import edu.aitu.oop3.RoomManagement.IRoomRepository;
+import edu.aitu.oop3.RoomManagement.Room;
+import edu.aitu.oop3.RoomManagement.RoomFactory;
+import edu.aitu.oop3.RoomManagement.RoomRepository;
 
 import java.sql.Date;
 import java.util.List;
@@ -17,25 +22,27 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         IDB db = new PostgresDB();
-        Iroomrepository roomRepo = new RoomRepository(db);
-        IReservation resRepo = new ReservationRepository(db);
-        IPaymentRepository payRepo = new PaymentRepository(db);
 
+        IRoomRepository roomRepo = new RoomRepository(db);
+
+        IReservationRepository resRepo = new ReservationRepository(db);
         BookingService service = new BookingService(roomRepo, resRepo);
+
+        IPaymentRepository payRepo = new PaymentRepository(db);
         PaymentService payService = new PaymentService(payRepo);
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Connecting to database...");
 
         while (true) {
-            System.out.println("\n HOSTEL BOOKING SYSTEM (Milestone 2)");
+            System.out.println("\n HOSTEL BOOKING SYSTEM (Endterm Component Ver.)");
             System.out.println("1. List All Rooms");
             System.out.println("2. Search Available Rooms");
             System.out.println("3. Make Reservation");
             System.out.println("4. Cancel Reservation");
             System.out.println("5. Add New Room ");
             System.out.println("6. Filter Rooms by Price ");
-            System.out.println("7. Custom Reservation ");
+            System.out.println("7. Custom Reservation (Builder + Pricing)");
             System.out.println("0. Exit");
             System.out.print("Select option: ");
 
@@ -113,13 +120,11 @@ public class Main {
                 }
 
             } else if (choice == 6) {
-
                 System.out.print("Enter max price: ");
                 double max = scanner.nextDouble();
-
                 List<Room> cheapRooms = service.getRoomsFilteredByPrice(max);
                 if (cheapRooms != null) {
-                    cheapRooms.forEach(r -> System.out.println(r));
+                    cheapRooms.forEach(System.out::println);
                 }
 
             } else if (choice == 7) {
@@ -137,6 +142,7 @@ public class Main {
                     PricingStrategy pricing = PricingStrategy.getInstance();
                     double finalPrice = pricing.calculatePrice(room.getPrice(), date.toLocalDate());
                     System.out.println("Calculated Price (with seasonal/weekend adjustment): " + finalPrice);
+
                     Reservation res = new Reservation.Builder()
                             .setGuestId(gId)
                             .setRoomId(rId)
